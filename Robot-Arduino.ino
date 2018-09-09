@@ -68,8 +68,8 @@ void Frente() {
 }
 
 void Frenar() {
-  analogWrite(derB, 0);  // Detiene los Motores
-  analogWrite(izqB, 0);
+  analogWrite(derA, 0);  // Detiene los Motores
+  analogWrite(izqA , 0);
   delay (500);
 }
 
