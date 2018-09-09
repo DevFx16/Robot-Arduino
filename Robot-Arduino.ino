@@ -1,28 +1,85 @@
+#include <Servo.h>
 
-void setup() {
+//Sensor Ultrasonico
+const int TrigSensor = 2;
+const int EcSensor = 4;
+
+//Led
+const int Led = 13;
+
+//ServoMotor
+Servo ServoMotor;
+
+//Motores
+const int izqA = 5;
+const int izqB = 6;
+const int derA = 11;
+const int derB = 3;
+const int vel = 255; // Velocidad de los motores (0-255)
+
+void setup()  {
   Serial.begin(9600);
-  pinMode(13, OUTPUT);
-  pinMode(6, INPUT);
-  pinMode(7, OUTPUT);
+  //Motores
+  pinMode(derA, OUTPUT);
+  pinMode(derB, OUTPUT);
+  pinMode(izqA, OUTPUT);
+  pinMode(izqB, OUTPUT);
+  //Servo
+  ServoMotor.attach(9);
+  //Led
+  pinMode(Led, OUTPUT);
+  //Sensor ultrasonico
+  pinMode(EcSensor, INPUT);
+  pinMode(TrigSensor, OUTPUT);
 }
 
-void loop() {
+void loop()  {
   SensorUltrasonico();
 }
 
+//Funcionamiento Del sensor
 void SensorUltrasonico() {
   long duracion, distancia;
-  digitalWrite(7, LOW);
+  digitalWrite(TrigSensor, LOW);
   delayMicroseconds(2);
-  digitalWrite(7, HIGH);
+  digitalWrite(TrigSensor, HIGH);
   delayMicroseconds(10);
-  digitalWrite(7, LOW);
-  duracion = pulseIn(6, HIGH);
+  digitalWrite(TrigSensor, LOW);
+  duracion = pulseIn(EcSensor, HIGH);
   distancia = (duracion / 2) / 29;
-  if (distancia <= 15 && distancia >= 1) {
-    digitalWrite(13, LOW);
+  //Limite
+  if (distancia <= 100 && distancia >= 1) {
+    digitalWrite(Led, HIGH);
+    Frenar();
+    ServoGrados(0, 2000);
+    ServoGrados(180, 2000);
   } else {
-    digitalWrite(13, HIGH);
+    digitalWrite(Led, LOW);
+    Frente();
+    ServoGrados(90, 200);
   }
   delay(100);
+}
+
+void Frente() {
+  analogWrite(derA, vel);  // Frente 2 segundos
+  analogWrite(izqA, vel);
+  delay (2000);
+}
+
+void Frenar() {
+  analogWrite(derB, 0);  // Detiene los Motores
+  analogWrite(izqB, 0);
+  delay (500);
+}
+
+void Reversa() {
+  analogWrite(derB, vel);  // Reversa 2 segundos
+  analogWrite(izqB, vel);
+  delay (2000);
+}
+
+void ServoGrados(int Grados, int Delay) {
+  ServoMotor.write(Grados);
+  delay(Delay);
 }
