@@ -73,6 +73,16 @@ void Frenar() {
   delay (500);
 }
 
+void Girar() {
+  analogWrite(derA, vel);  // Derecha 0,5 segundos
+  analogWrite(izqA, 0);
+  delay (500);
+
+  analogWrite(derA, 0);    // Izquierda 0,5 segundos
+  analogWrite(izqA, vel);
+  delay (500);
+}
+
 void Reversa() {
   analogWrite(derB, vel);  // Reversa 2 segundos
   analogWrite(izqB, vel);
