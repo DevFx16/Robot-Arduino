@@ -2,7 +2,7 @@
 
 //Sensor Ultrasonico
 const int TrigSensor = 2;
-const int EcSensor = 4;
+const int EcSensor = 10;
 
 //Led
 const int Led = 13;
@@ -51,6 +51,7 @@ void SensorUltrasonico() {
   if (distancia <= 100 && distancia >= 1) {
     digitalWrite(Led, HIGH);
     Frenar();
+    Girar();
     ServoGrados(0, 2000);
     ServoGrados(180, 2000);
   } else {
