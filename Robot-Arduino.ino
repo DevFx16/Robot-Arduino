@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 //Sensor Ultrasonico
-const int TrigSensor = 2;
+const int TrigSensor = 11;
 const int EcSensor = 10;
 
 //Led
@@ -11,10 +11,10 @@ const int Led = 13;
 Servo ServoMotor;
 
 //Motores
-const int izqA = 5;
-const int izqB = 6;
-const int derA = 11;
-const int derB = 3;
+const int izqA = 3;
+const int izqB = 5;
+const int derA = 6;
+const int derB = 11;
 const int vel = 255; // Velocidad de los motores (0-255)
 
 void setup()  {
@@ -48,18 +48,18 @@ void SensorUltrasonico() {
   duracion = pulseIn(EcSensor, HIGH);
   distancia = (duracion / 2) / 29;
   //Limite
+  Serial.println(distancia);
   if (distancia <= 100 && distancia >= 1) {
     digitalWrite(Led, HIGH);
     Frenar();
-    Girar();
     ServoGrados(0, 2000);
     ServoGrados(180, 2000);
   } else {
     digitalWrite(Led, LOW);
-    Frente();
+    Reversa();
     ServoGrados(90, 200);
   }
-  delay(100);
+  delay(200);
 }
 
 void Frente() {
@@ -70,7 +70,9 @@ void Frente() {
 
 void Frenar() {
   analogWrite(derA, 0);  // Detiene los Motores
+  analogWrite(derB, 0);  // Detiene los Motores
   analogWrite(izqA , 0);
+    analogWrite(izqB , 0);
   delay (500);
 }
 
