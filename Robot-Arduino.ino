@@ -34,7 +34,7 @@ void setup()  {
 }
 
 void loop()  {
-  SensorUltrasonico();
+ SensorUltrasonico();
 }
 
 //Funcionamiento Del sensor
@@ -54,9 +54,11 @@ void SensorUltrasonico() {
     Frenar();
     ServoGrados(0, 2000);
     ServoGrados(180, 2000);
+    Reversa();
+    Girar();
   } else {
     digitalWrite(Led, LOW);
-    Reversa();
+    Frente();
     ServoGrados(90, 200);
   }
   delay(200);
@@ -72,23 +74,23 @@ void Frenar() {
   analogWrite(derA, 0);  // Detiene los Motores
   analogWrite(derB, 0);  // Detiene los Motores
   analogWrite(izqA , 0);
-    analogWrite(izqB , 0);
+  analogWrite(izqB , 0);
   delay (500);
 }
 
 void Girar() {
   analogWrite(derA, vel);  // Derecha 0,5 segundos
-  analogWrite(izqA, 0);
+  analogWrite(izqB, 0);
   delay (500);
-
-  analogWrite(derA, 0);    // Izquierda 0,5 segundos
-  analogWrite(izqA, vel);
-  delay (500);
+  /*
+    analogWrite(derA, 0);    // Izquierda 0,5 segundos
+    analogWrite(izqA, vel);
+    delay (500); */
 }
 
 void Reversa() {
   analogWrite(derB, vel);  // Reversa 2 segundos
-  analogWrite(izqB, vel);
+  analogWrite(izqA, vel);
   delay (2000);
 }
 
