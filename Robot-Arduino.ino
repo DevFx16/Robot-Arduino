@@ -3,6 +3,7 @@
 //Sensor Ultrasonico
 const int TrigSensor = 11;
 const int EcSensor = 10;
+long distancia = 0;
 
 //Led
 const int Led = 13;
@@ -34,12 +35,24 @@ void setup()  {
 }
 
 void loop()  {
- SensorUltrasonico();
+  if (distancia <= 100 && distancia >= 1) {
+    digitalWrite(Led, HIGH);
+    Frenar();
+    ServoGrados(0, 1000);
+    ServoGrados(180, 1000);
+    Girar();
+    SensorUltrasonico();
+  } else {
+    digitalWrite(Led, LOW);
+     ServoGrados(90, 500);
+    Frente();
+    SensorUltrasonico();
+  }
 }
 
 //Funcionamiento Del sensor
 void SensorUltrasonico() {
-  long duracion, distancia;
+  long duracion;
   digitalWrite(TrigSensor, LOW);
   delayMicroseconds(2);
   digitalWrite(TrigSensor, HIGH);
@@ -49,25 +62,13 @@ void SensorUltrasonico() {
   distancia = (duracion / 2) / 29;
   //Limite
   Serial.println(distancia);
-  if (distancia <= 100 && distancia >= 1) {
-    digitalWrite(Led, HIGH);
-    Frenar();
-    ServoGrados(0, 2000);
-    ServoGrados(180, 2000);
-    Reversa();
-    Girar();
-  } else {
-    digitalWrite(Led, LOW);
-    Frente();
-    ServoGrados(90, 200);
-  }
   delay(200);
 }
 
-void Frente() {
+void Reversa() {
   analogWrite(derA, vel);  // Frente 2 segundos
   analogWrite(izqA, vel);
-  delay (2000);
+  delay (500);
 }
 
 void Frenar() {
@@ -81,17 +82,17 @@ void Frenar() {
 void Girar() {
   analogWrite(derA, vel);  // Derecha 0,5 segundos
   analogWrite(izqB, 0);
-  delay (500);
+  delay (1000);
   /*
     analogWrite(derA, 0);    // Izquierda 0,5 segundos
     analogWrite(izqA, vel);
     delay (500); */
 }
 
-void Reversa() {
+void Frente() {
   analogWrite(derB, vel);  // Reversa 2 segundos
-  analogWrite(izqA, vel);
-  delay (2000);
+  analogWrite(izqB, vel);
+  delay (500);
 }
 
 void ServoGrados(int Grados, int Delay) {
