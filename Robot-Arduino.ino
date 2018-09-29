@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 //Sensor Ultrasonico
-const int TrigSensor = 11;
+const int TrigSensor = 8;
 const int EcSensor = 10;
 long distancia = 0;
 
@@ -30,69 +30,61 @@ void setup()  {
   //Led
   pinMode(Led, OUTPUT);
   //Sensor ultrasonico
-  pinMode(EcSensor, INPUT);
-  pinMode(TrigSensor, OUTPUT);
+  pinMode(TrigSensor, OUTPUT); //pin como salida
+  pinMode(EcSensor, INPUT);  //pin como entrada
 }
 
 void loop()  {
-  if (distancia <= 100 && distancia >= 1) {
+  SensorUltrasonico();
+  digitalWrite(Led, LOW);
+  Frente();
+  ServoGrados(90, 500);
+  if (distancia <= 40) {
     digitalWrite(Led, HIGH);
     Frenar();
-    ServoGrados(0, 1000);
-    ServoGrados(180, 1000);
+    ServoGrados(0, 500);
+    ServoGrados(180, 500);
     Girar();
-    SensorUltrasonico();
-  } else {
-    digitalWrite(Led, LOW);
-     ServoGrados(90, 500);
-    Frente();
-    SensorUltrasonico();
   }
 }
 
 //Funcionamiento Del sensor
 void SensorUltrasonico() {
-  long duracion;
-  digitalWrite(TrigSensor, LOW);
-  delayMicroseconds(2);
+  long t; //timepo que demora en llegar el eco
+
   digitalWrite(TrigSensor, HIGH);
-  delayMicroseconds(10);
+  delayMicroseconds(10);          //Enviamos un pulso de 10us
   digitalWrite(TrigSensor, LOW);
-  duracion = pulseIn(EcSensor, HIGH);
-  distancia = (duracion / 2) / 29;
-  //Limite
+
+  t = pulseIn(EcSensor, HIGH); //obtenemos el ancho del pulso
+  distancia = t / 59;           //escalamos el tiempo a una distancia en cm
   Serial.println(distancia);
-  delay(200);
 }
 
-void Reversa() {
-  analogWrite(derA, vel);  // Frente 2 segundos
+void Frente() {
+  analogWrite(derA, vel);  // Reversa 2 segundos
   analogWrite(izqA, vel);
-  delay (500);
+  delay(1000);
 }
 
 void Frenar() {
-  analogWrite(derA, 0);  // Detiene los Motores
   analogWrite(derB, 0);  // Detiene los Motores
-  analogWrite(izqA , 0);
   analogWrite(izqB , 0);
-  delay (500);
+  analogWrite(derA, 0);  // Detiene los Motores
+  analogWrite(izqA , 0);
+  delay(500);
 }
 
 void Girar() {
   analogWrite(derA, vel);  // Derecha 0,5 segundos
   analogWrite(izqB, 0);
-  delay (1000);
-  /*
-    analogWrite(derA, 0);    // Izquierda 0,5 segundos
-    analogWrite(izqA, vel);
-    delay (500); */
+  delay(1000);
 }
 
-void Frente() {
+void Reversa() {
   analogWrite(derB, vel);  // Reversa 2 segundos
   analogWrite(izqB, vel);
-  delay (500);
+  delay(500);
 }
 
 void ServoGrados(int Grados, int Delay) {
