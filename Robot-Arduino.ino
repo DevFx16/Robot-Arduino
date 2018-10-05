@@ -36,15 +36,19 @@ void setup()  {
 
 void loop()  {
   SensorUltrasonico();
-  digitalWrite(Led, LOW);
-  Frente();
-  ServoGrados(90, 500);
   if (distancia <= 40) {
     digitalWrite(Led, HIGH);
     Frenar();
     ServoGrados(0, 500);
     ServoGrados(180, 500);
+    Reversa();
+    Frenar();
     Girar();
+    Frenar();
+  } else {
+    digitalWrite(Led, LOW);
+    Frente();
+    ServoGrados(90, 500);
   }
 }
 
@@ -64,7 +68,7 @@ void SensorUltrasonico() {
 void Frente() {
   analogWrite(derA, vel);  // Reversa 2 segundos
   analogWrite(izqA, vel);
-  delay(1000);
+  delay(500);
 }
 
 void Frenar() {
@@ -72,19 +76,19 @@ void Frenar() {
   analogWrite(izqB , 0);
   analogWrite(derA, 0);  // Detiene los Motores
   analogWrite(izqA , 0);
-  delay(500);
+  delay(800);
 }
 
 void Girar() {
   analogWrite(derA, vel);  // Derecha 0,5 segundos
   analogWrite(izqB, 0);
-  delay(1000);
+  delay(2500);
 }
 
 void Reversa() {
-  analogWrite(derB, vel);  // Reversa 2 segundos
+  analogWrite(derB, vel);
   analogWrite(izqB, vel);
-  delay(500);
+  delay(1500);
 }
 
 void ServoGrados(int Grados, int Delay) {
