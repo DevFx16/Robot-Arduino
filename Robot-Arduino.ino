@@ -68,7 +68,6 @@ void SensorUltrasonico() {
 void Frente() {
   analogWrite(derA, vel);  // Reversa 2 segundos
   analogWrite(izqA, vel);
-  delay(500);
 }
 
 void Frenar() {
